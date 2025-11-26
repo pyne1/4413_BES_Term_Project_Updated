@@ -48,6 +48,8 @@
     </style>
 </head>
 <body>
+<%@ include file="logout.jsp" %>
+
 <div class="container">
 	<%@ include file="cartIcon.jsp" %>
     <%

@@ -1,3 +1,5 @@
+<%@ include file="logout.jsp" %>
+
 <%
     Integer cartCount = (Integer) session.getAttribute("cartCount");
     if (cartCount == null) cartCount = 0;

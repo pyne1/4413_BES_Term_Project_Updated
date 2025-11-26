@@ -19,7 +19,15 @@ public class ProductListServlet extends HttpServlet {
                          HttpServletResponse response)
             throws ServletException, IOException {
 
-        String view = request.getParameter("view");  // all | brand | category
+        HttpSession session = request.getSession(false);
+        Object user = (session != null) ? session.getAttribute("user") : null;
+
+        if (user == null) {
+            request.getRequestDispatcher("forceLogin.jsp").forward(request, response);
+            return;
+        }
+
+        String view = request.getParameter("view");
         String brand = request.getParameter("brand");
         String category = request.getParameter("category");
 
@@ -30,7 +38,7 @@ public class ProductListServlet extends HttpServlet {
         } else if ("category".equalsIgnoreCase(view) && category != null && !category.isEmpty()) {
             products = ProductDao.getByCategory(category);
         } else {
-            view = "all"; // default
+            view = "all";
             products = ProductDao.getAllProducts();
         }
 

@@ -19,8 +19,15 @@ public class CartServlet extends HttpServlet {
                          HttpServletResponse resp)
             throws ServletException, IOException {
 
-        HttpSession session = req.getSession();
+        HttpSession session = req.getSession(false);
+        Object user = (session != null) ? session.getAttribute("user") : null;
 
+        if (user == null) {
+            req.getRequestDispatcher("forceLogin.jsp").forward(req, resp);
+            return;
+        }
+
+        session = req.getSession();
         Cart cart = (Cart) session.getAttribute("cart");
         if (cart == null) {
             cart = new Cart();
@@ -42,10 +49,7 @@ public class CartServlet extends HttpServlet {
                 if (p != null) {
                     cart.addItem(p);
                 }
-
-            // Update cart count
-                session.setAttribute("cartCount", cart.getTotalQuantity());  
-            // Stay on the same page
+                session.setAttribute("cartCount", cart.getTotalQuantity());
                 String referer = req.getHeader("referer");
                 resp.sendRedirect(referer);
                 break;
