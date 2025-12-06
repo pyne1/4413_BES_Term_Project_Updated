@@ -17,18 +17,13 @@ public class Customer {
 
     public Customer() {}
 
-    public Customer(int id, String firstName, String lastName, String email, String password,
-                    String creditCardNumber, String creditCardExpiry, String creditCardCVV,
-                    int addressId) {
+    public Customer(int id, String firstName, String lastName, String email, String password)
+    		{
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
-        this.creditCardNumber = creditCardNumber;
-        this.creditCardExpiry = creditCardExpiry;
-        this.creditCardCVV = creditCardCVV;
-        this.addressId = addressId;
     }
 
 
@@ -71,33 +66,5 @@ public class Customer {
     public void setPassword(String password) {
         this.password = password;
     }
-
-    public String getCreditCardNumber() {
-        return creditCardNumber;
-    }
-
-    public void setCreditCardNumber(String creditCardNumber) {
-        this.creditCardNumber = creditCardNumber;
-    }
-
-    public String getCreditCardExpiry() {
-        return creditCardExpiry;
-    }
-
-    public void setCreditCardExpiry(String creditCardExpiry) {
-        this.creditCardExpiry = creditCardExpiry;
-    }
-
-    public String getCreditCardCVV() {
-        return creditCardCVV;
-    }
-
-    public void setCreditCardCVV(String creditCardCVV) {
-        this.creditCardCVV = creditCardCVV;
-    }
-
-    public Integer getAddressId() { return addressId; }
-    
-    public void setAddressId(Integer addressId) { this.addressId = addressId; }
 
 }

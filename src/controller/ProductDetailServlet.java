@@ -18,7 +18,7 @@ public class ProductDetailServlet extends HttpServlet {
                          HttpServletResponse response)
             throws ServletException, IOException {
 
-        String id = request.getParameter("id");  // itemID
+        String id = request.getParameter("id");
         if (id == null || id.isEmpty()) {
             response.sendRedirect("catalog");
             return;

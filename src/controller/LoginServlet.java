@@ -19,8 +19,6 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        // just show the login page
         request.getRequestDispatcher("login.jsp").forward(request, response);
     }
 
@@ -30,32 +28,26 @@ public class LoginServlet extends HttpServlet {
 
         request.setCharacterEncoding("UTF-8");
 
-        String email    = request.getParameter("email");
+        String email = request.getParameter("email");
         String password = request.getParameter("password");
 
-        if (email == null || password == null ||
-                email.isEmpty() || password.isEmpty()) {
-
+        if (email == null || password == null || email.isEmpty() || password.isEmpty()) {
             request.setAttribute("error", "Email and password are required.");
             request.getRequestDispatcher("login.jsp").forward(request, response);
             return;
         }
 
-        // use your existing DAO helper
         Customer customer = CustomerDAO.validateLogin(email, password);
 
         if (customer == null) {
-            // invalid credentials
             request.setAttribute("error", "Invalid email or password.");
             request.getRequestDispatcher("login.jsp").forward(request, response);
             return;
         }
 
-        // login success: store user in session
         HttpSession session = request.getSession();
         session.setAttribute("currentCustomer", customer);
 
-      
-        response.sendRedirect(request.getContextPath() + "/items.jsp");
+        response.sendRedirect(request.getContextPath() + "/catalog?view=all");
     }
 }

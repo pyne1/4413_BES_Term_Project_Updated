@@ -8,15 +8,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
-
-    // you technically don't need this because CustomerDAO methods are static,
-    // but it's fine to keep
     private CustomerDAO customerDAO;
 
     @Override
@@ -27,8 +25,6 @@ public class RegisterServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        // show the registration page
         request.getRequestDispatcher("register.jsp").forward(request, response);
     }
 
@@ -38,17 +34,12 @@ public class RegisterServlet extends HttpServlet {
 
         request.setCharacterEncoding("UTF-8");
 
-        // these names MUST match your <input name="..."> in register.jsp
-        String firstName          = request.getParameter("firstName");
-        String lastName           = request.getParameter("lastName");
-        String email              = request.getParameter("email");
-        String password           = request.getParameter("password");
-        String creditCardNumber   = request.getParameter("creditCardNumber");
-        String creditCardExpiry   = request.getParameter("creditCardExpiry");
-        String creditCardCVV      = request.getParameter("creditCardCVV");
-        String addressIdParam     = request.getParameter("addressId"); // optional/hidden for now
+        String firstName        = request.getParameter("firstName");
+        String lastName         = request.getParameter("lastName");
+        String email            = request.getParameter("email");
+        String password         = request.getParameter("password");
+       
 
-        // basic validation (you can tighten this later)
         if (firstName == null || lastName == null || email == null || password == null ||
                 firstName.isEmpty() || lastName.isEmpty() ||
                 email.isEmpty() || password.isEmpty()) {
@@ -59,7 +50,6 @@ public class RegisterServlet extends HttpServlet {
         }
 
         try {
-            // 1) check if customer already exists
             Customer existing = CustomerDAO.findByEmail(email);
             if (existing != null) {
                 request.setAttribute("error", "An account with that email already exists.");
@@ -67,28 +57,14 @@ public class RegisterServlet extends HttpServlet {
                 return;
             }
 
-            // 2) build Customer object
             Customer customer = new Customer();
             customer.setFirstName(firstName);
             customer.setLastName(lastName);
             customer.setEmail(email);
-            customer.setPassword(password);  // plain text for now (DB column passwordHash)
-            customer.setCreditCardNumber(creditCardNumber);
-            customer.setCreditCardExpiry(creditCardExpiry);
-            customer.setCreditCardCVV(creditCardCVV);
+            customer.setPassword(password);
+            
 
-            // addressID is nullable in DB, so handle safely
-            if (addressIdParam != null && !addressIdParam.isEmpty()) {
-                try {
-                    customer.setAddressId(Integer.parseInt(addressIdParam));
-                } catch (NumberFormatException e) {
-                    customer.setAddressId(null); // bad/blank input → treat as null
-                }
-            } else {
-                customer.setAddressId(null);
-            }
 
-            // 3) save to DB (uses your CustomerDAO.createCustomer)
             boolean created = CustomerDAO.createCustomer(customer);
 
             if (!created) {
@@ -97,8 +73,10 @@ public class RegisterServlet extends HttpServlet {
                 return;
             }
 
-            
-            response.sendRedirect(request.getContextPath() + "/items.jsp");
+            HttpSession session = request.getSession();
+            session.setAttribute("currentCustomer", customer);
+
+            response.sendRedirect(request.getContextPath() + "/catalog?view=all");
 
         } catch (Exception e) {
             e.printStackTrace();

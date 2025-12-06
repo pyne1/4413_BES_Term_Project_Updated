@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Your Cart - YorkU Thrift Store</title>
-    <link rel="stylesheet" href="css/cart.css">
+    <link rel="stylesheet" href="style.css">
 
     <style>
         .logout-container {

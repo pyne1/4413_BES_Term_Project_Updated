@@ -1,9 +1,18 @@
-/*Brands*/
+-- 1. Create schema
+CREATE DATABASE IF NOT EXISTS thriftstore_products;
+USE thriftstore_products;
+
+-- 2. Brands
+DROP TABLE IF EXISTS products;
+DROP TABLE IF EXISTS categories;
+DROP TABLE IF EXISTS brands;
+DROP TABLE IF EXISTS Customer;
+DROP TABLE IF EXISTS orders;
+
 CREATE TABLE brands (
-    brand_id SERIAL PRIMARY KEY,
+    brand_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) UNIQUE NOT NULL
 );
-
 
 INSERT INTO brands (name) VALUES
 ('Ralph Lauren'),
@@ -18,9 +27,9 @@ INSERT INTO brands (name) VALUES
 ('Banana Republic'),
 ('Adidas');
 
-/*Categories*/
+-- 3. Categories
 CREATE TABLE categories (
-    category_id SERIAL PRIMARY KEY,
+    category_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) UNIQUE NOT NULL
 );
 
@@ -32,17 +41,20 @@ INSERT INTO categories (name) VALUES
 ('Footwear'),
 ('Activewear');
 
-
-/*Products*/
+-- 4. Products
 CREATE TABLE products (
-    product_id SERIAL PRIMARY KEY,
+    product_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(150) NOT NULL,
     description TEXT,
-    price NUMERIC(10,2) NOT NULL,
-    brand_id INT REFERENCES brands(brand_id),
-    category_id INT REFERENCES categories(category_id),
+    price DECIMAL(10,2) NOT NULL,
+    brand_id INT,
+    category_id INT,
     image_url VARCHAR(255),
-    stock INT DEFAULT 0
+    stock INT DEFAULT 0,
+    CONSTRAINT fk_products_brand
+        FOREIGN KEY (brand_id) REFERENCES brands(brand_id),
+    CONSTRAINT fk_products_category
+        FOREIGN KEY (category_id) REFERENCES categories(category_id)
 );
 
 INSERT INTO products (name, description, price, brand_id, category_id, image_url, stock) VALUES
@@ -221,3 +233,31 @@ INSERT INTO products (name, description, price, brand_id, category_id, image_url
  (SELECT brand_id FROM brands WHERE name = 'Adidas'),
  (SELECT category_id FROM categories WHERE name = 'Bags'),
  'images/adidas_bag.jpg', 10);
+
+-- 5. Customers
+CREATE TABLE Customer (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    firstName VARCHAR(100) NOT NULL,
+    lastName VARCHAR(100) NOT NULL,
+    email VARCHAR(150) NOT NULL UNIQUE,
+    passwordHash VARCHAR(255) NOT NULL,
+    creditCardNumber VARCHAR(50),
+    creditCardExpiry VARCHAR(10),
+    creditCardCVV VARCHAR(10),
+    billingAddress VARCHAR(255),
+    billingCity VARCHAR(100),
+    billingPostal VARCHAR(20),
+    shippingAddress VARCHAR(255),
+    shippingCity VARCHAR(100),
+    shippingPostal VARCHAR(20)
+);
+
+-- 6. Orders
+CREATE TABLE orders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    customerEmail VARCHAR(255),
+    total DECIMAL(10,2),
+    orderDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_orders_customer_email
+        FOREIGN KEY (customerEmail) REFERENCES Customer(email)
+);

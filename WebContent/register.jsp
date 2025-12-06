@@ -41,20 +41,8 @@
             <label>Password:</label><br>
             <input type="password" name="password" required><br><br>
 
-            <!-- CREDIT CARD NUMBER -->
-            <label>Credit Card Number:</label><br>
-            <input type="text" name="creditCardNumber"><br><br>
 
-            <!-- CREDIT CARD EXPIRY -->
-            <label>Credit Card Expiry (MM/YY):</label><br>
-            <input type="text" name="creditCardExpiry"><br><br>
 
-            <!-- CREDIT CARD CVV -->
-            <label>Credit Card CVV:</label><br>
-            <input type="text" name="creditCardCVV"><br><br>
-
-            <!-- ADDRESS ID -->
-            <input type="hidden" name="addressId" value="1" />
 
             <button type="submit" class="btn">Create Account</button>
         </form>

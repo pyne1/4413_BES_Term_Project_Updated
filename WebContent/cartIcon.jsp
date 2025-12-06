@@ -1,8 +1,14 @@
-<%@ include file="logout.jsp" %>
+<%@ page import="model.Cart" %>
 
 <%
-    Integer cartCount = (Integer) session.getAttribute("cartCount");
-    if (cartCount == null) cartCount = 0;
+    Cart cartIcon = (Cart) session.getAttribute("cart");
+    int cartCount = 0;
+
+    if (cartIcon != null) {
+        cartCount = cartIcon.getTotalQuantity();
+    }
+
+    session.setAttribute("cartCount", cartCount);
 %>
 
 <div style="position:relative; float:right; margin:10px;">

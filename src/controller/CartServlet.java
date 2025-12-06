@@ -14,21 +14,24 @@ public class CartServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
+    
+    
     @Override
-    protected void doGet(HttpServletRequest req,
-                         HttpServletResponse resp)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)   throws ServletException, IOException {
 
         HttpSession session = req.getSession(false);
-        Object user = (session != null) ? session.getAttribute("user") : null;
+        Object user = (session != null) ? session.getAttribute("currentCustomer") : null;
 
+        //user must be logged in 
         if (user == null) {
             req.getRequestDispatcher("forceLogin.jsp").forward(req, resp);
             return;
         }
 
-        session = req.getSession();
         Cart cart = (Cart) session.getAttribute("cart");
+      
+        
+        // add new cart if there isnt a current session going on
         if (cart == null) {
             cart = new Cart();
             session.setAttribute("cart", cart);
@@ -42,23 +45,31 @@ public class CartServlet extends HttpServlet {
         }
 
         switch (todo) {
-
             case "add":
                 String itemID = req.getParameter("itemID");
                 Product p = ProductDao.getById(itemID);
+                
+                
                 if (p != null) {
                     cart.addItem(p);
                 }
+               
+                
                 session.setAttribute("cartCount", cart.getTotalQuantity());
                 String referer = req.getHeader("referer");
                 resp.sendRedirect(referer);
                 break;
 
+                
+                
+                
             case "remove":
                 cart.removeItem(req.getParameter("itemID"));
                 session.setAttribute("cartCount", cart.getTotalQuantity());
                 resp.sendRedirect("cart");
                 break;
+                
+                
 
             case "update":
                 String id = req.getParameter("itemID");
@@ -68,6 +79,8 @@ public class CartServlet extends HttpServlet {
                 resp.sendRedirect("cart");
                 break;
 
+                
+                
             default:
                 req.getRequestDispatcher("cart.jsp").forward(req, resp);
         }

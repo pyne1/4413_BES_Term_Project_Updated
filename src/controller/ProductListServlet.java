@@ -20,7 +20,7 @@ public class ProductListServlet extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = request.getSession(false);
-        Object user = (session != null) ? session.getAttribute("user") : null;
+        Object user = (session != null) ? session.getAttribute("currentCustomer") : null;
 
         if (user == null) {
             request.getRequestDispatcher("forceLogin.jsp").forward(request, response);
