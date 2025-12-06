@@ -9,6 +9,7 @@
 <body>
 <%@ include file="logout.jsp" %>
 
+
 <div class="container">
     <img src="https://www.yorku.ca/brand/wp-content/uploads/sites/386/2023/08/UB_Logos_1.png" 
          alt="York University Logo" 

@@ -17,7 +17,12 @@
 
 <body>
 <%@ include file="logout.jsp" %>
+<%@ include file="adminbutton.jsp" %>
+
 <h1>Admin Dashboard</h1>
+
+<a href="catalog" style="display:inline-block; margin-bottom:15px; font-size:18px; text-decoration:none;"> Back to Catalog </a>
+
 
 <div class="nav">
     <a href="admin?section=inventory">Inventory</a>

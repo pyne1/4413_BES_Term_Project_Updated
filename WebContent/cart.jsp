@@ -30,6 +30,8 @@
 </head>
 <body>
 <%@ include file="logout.jsp" %>
+<%@ include file="adminbutton.jsp" %>
+
 
 
 <div class="logout-container">

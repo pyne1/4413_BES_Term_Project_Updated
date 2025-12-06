@@ -31,6 +31,8 @@
 <body>
 <%@ include file="logout.jsp" %>
 <%@ include file="cartIcon.jsp" %>
+<%@ include file="adminbutton.jsp" %>
+
 
 <div class="container">
     <h1>Checkout</h1>

@@ -1,4 +1,6 @@
 <%@ page import="model.Cart" %>
+<%@ include file="adminbutton.jsp" %>
+
 
 <%
     Cart cartIcon = (Cart) session.getAttribute("cart");

@@ -10,6 +10,7 @@
 <body>
 <%@ include file="logout.jsp" %>
 
+
 <div class="container">
     <h1>Order Confirmed</h1>
     <p>Thank you for your order. Your payment has been approved.</p>

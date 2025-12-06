@@ -73,6 +73,7 @@
 <body>
 <div class="container">
 	<%@ include file="logout.jsp" %>
+	
 
 	<%@ include file="cartIcon.jsp" %>
     <h1>Catalog</h1>
