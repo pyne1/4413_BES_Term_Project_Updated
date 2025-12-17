@@ -66,6 +66,8 @@ if (section == null) section = "inventory";
                     <input type="text" name="category" value="<%= p.getCategory() %>" size="6">
                     <input type="number" step="0.01" name="price" value="<%= p.getPrice() %>" size="5">
                     <input type="number" name="quantity" value="<%= p.getQuantity() %>" size="5">
+                    
+                    <!-- button to save -->>
                     <button class="btn">Save</button>
                 </form>
             </td>
