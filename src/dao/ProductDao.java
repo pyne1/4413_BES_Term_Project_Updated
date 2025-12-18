@@ -18,11 +18,12 @@ public class ProductDao {
         p.setCategory(rs.getString("category_name"));
         p.setPrice(rs.getDouble("price"));
         p.setQuantity(rs.getInt("stock"));
+        p.setImageUrl(rs.getString("image_url"));
         return p;
     }
 
     private static final String BASE_SELECT =
-            "SELECT p.product_id, p.name, p.description, p.price, p.stock, " +
+            "SELECT p.product_id, p.name, p.description, p.price, p.stock, p.image_url, " +
             "b.name AS brand_name, c.name AS category_name " +
             "FROM products p " +
             "LEFT JOIN brands b ON p.brand_id = b.brand_id " +

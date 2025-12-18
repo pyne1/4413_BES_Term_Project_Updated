@@ -63,9 +63,9 @@
         } else {
     %>
         <h1><%= p.getName() %></h1>
-        <img src="<%= p.getImageUrl() %>" 
-        alt="<%= p.getName() %>" 
-        style="max-width:250px; border-radius:8px; margin:20px 0;">
+		<img src="<%= request.getContextPath() + "/" + p.getImageUrl() %>"
+     	alt="<%= p.getName() %>"
+     	style="max-width:250px; border-radius:8px; margin:20px 0;">
         
         <p class="meta">
             Category: <b><%= p.getCategory() %></b> |
