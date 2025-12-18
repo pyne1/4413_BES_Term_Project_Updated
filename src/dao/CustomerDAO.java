@@ -16,6 +16,17 @@ public class CustomerDAO {
         c.setLastName(rs.getString("lastName"));
         c.setEmail(rs.getString("email"));
         c.setPassword(rs.getString("passwordHash"));
+        c.setCreditCardNumber(rs.getString("creditCardNumber"));
+        c.setCreditCardExpiry(rs.getString("creditCardExpiry"));
+        c.setCreditCardCVV(rs.getString("creditCardCVV"));
+
+        c.setBillingAddress(rs.getString("billingAddress"));
+        c.setBillingCity(rs.getString("billingCity"));
+        c.setBillingPostal(rs.getString("billingPostal"));
+
+        c.setShippingAddress(rs.getString("shippingAddress"));
+        c.setShippingCity(rs.getString("shippingCity"));
+        c.setShippingPostal(rs.getString("shippingPostal"));
         return c;
     }
 
@@ -60,7 +71,12 @@ public class CustomerDAO {
     }
 
     public static boolean createCustomer(Customer c) {
-        String sql = "INSERT INTO customer (firstName, lastName, email, passwordHash) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO customer " +
+                "(firstName, lastName, email, passwordHash, " +
+                "creditCardNumber, creditCardExpiry, creditCardCVV, " +
+                "billingAddress, billingCity, billingPostal, " +
+                "shippingAddress, shippingCity, shippingPostal) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -69,6 +85,18 @@ public class CustomerDAO {
             ps.setString(2, c.getLastName());
             ps.setString(3, c.getEmail());
             ps.setString(4, c.getPassword());
+
+            ps.setString(5, c.getCreditCardNumber());
+            ps.setString(6, c.getCreditCardExpiry());
+            ps.setString(7, c.getCreditCardCVV());
+
+            ps.setString(8, c.getBillingAddress());
+            ps.setString(9, c.getBillingCity());
+            ps.setString(10, c.getBillingPostal());
+
+            ps.setString(11, c.getShippingAddress());
+            ps.setString(12, c.getShippingCity());
+            ps.setString(13, c.getShippingPostal());
 
             int rows = ps.executeUpdate();
             if (rows > 0) {
@@ -87,6 +115,7 @@ public class CustomerDAO {
         return false;
     }
 
+
     public static Customer validateLogin(String email, String plainPassword) {
         Customer c = findByEmail(email);
         if (c != null && plainPassword != null && plainPassword.equals(c.getPassword())) {
@@ -96,25 +125,41 @@ public class CustomerDAO {
     }
 
     public static boolean updateCustomer(Customer c) {
-        String sql = "UPDATE customer SET firstName = ?, lastName = ?, email = ? WHERE id = ?";
+        String sql = "UPDATE customer SET " +
+                "firstName = ?, lastName = ?, " +
+                "creditCardNumber = ?, creditCardExpiry = ?, creditCardCVV = ?, " +
+                "billingAddress = ?, billingCity = ?, billingPostal = ?, " +
+                "shippingAddress = ?, shippingCity = ?, shippingPostal = ? " +
+                "WHERE id = ?";
 
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, c.getFirstName());
             ps.setString(2, c.getLastName());
-            ps.setString(3, c.getEmail());
-            ps.setInt(4, c.getId());
 
-            int rows = ps.executeUpdate();
-            return rows > 0;
+            ps.setString(3, c.getCreditCardNumber());
+            ps.setString(4, c.getCreditCardExpiry());
+            ps.setString(5, c.getCreditCardCVV());
+
+            ps.setString(6, c.getBillingAddress());
+            ps.setString(7, c.getBillingCity());
+            ps.setString(8, c.getBillingPostal());
+
+            ps.setString(9, c.getShippingAddress());
+            ps.setString(10, c.getShippingCity());
+            ps.setString(11, c.getShippingPostal());
+
+            ps.setInt(12, c.getId());
+
+            return ps.executeUpdate() > 0;
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return false;
     }
+
 
     public static List<Customer> getAllCustomers() {
         List<Customer> list = new ArrayList<>();
@@ -139,7 +184,21 @@ public class CustomerDAO {
         return list;
     }
 
-    public static Customer register(String firstName, String lastName, String email, String passwordHash) {
+    public static Customer register(
+            String firstName,
+            String lastName,
+            String email,
+            String passwordHash,
+            String creditCardNumber,
+            String creditCardExpiry,
+            String creditCardCVV,
+            String billingAddress,
+            String billingCity,
+            String billingPostal,
+            String shippingAddress,
+            String shippingCity,
+            String shippingPostal
+    ) {
         Customer existing = findByEmail(email);
         if (existing != null) return null;
 
@@ -149,7 +208,20 @@ public class CustomerDAO {
         c.setEmail(email);
         c.setPassword(passwordHash);
 
+        c.setCreditCardNumber(creditCardNumber);
+        c.setCreditCardExpiry(creditCardExpiry);
+        c.setCreditCardCVV(creditCardCVV);
+
+        c.setBillingAddress(billingAddress);
+        c.setBillingCity(billingCity);
+        c.setBillingPostal(billingPostal);
+
+        c.setShippingAddress(shippingAddress);
+        c.setShippingCity(shippingCity);
+        c.setShippingPostal(shippingPostal);
+
         boolean ok = createCustomer(c);
         return ok ? c : null;
     }
+
 }

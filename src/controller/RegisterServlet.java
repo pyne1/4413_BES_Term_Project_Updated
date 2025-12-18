@@ -29,16 +29,45 @@ public class RegisterServlet extends HttpServlet {
         String lastName = request.getParameter("lastName");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
+        
+        // NEW: payment + billing + shipping
+        String creditCardNumber = request.getParameter("creditCardNumber");
+        String creditCardExpiry = request.getParameter("creditCardExpiry");
+        String creditCardCVV    = request.getParameter("creditCardCVV");
 
-        if (firstName == null || lastName == null || email == null || password == null ||
-                firstName.trim().isEmpty() || lastName.trim().isEmpty() ||
-                email.trim().isEmpty() || password.trim().isEmpty()) {
-            request.setAttribute("error", "All fields are required.");
+        String billingAddress = request.getParameter("billingAddress");
+        String billingCity    = request.getParameter("billingCity");
+        String billingPostal  = request.getParameter("billingPostal");
+
+        String shippingAddress = request.getParameter("shippingAddress");
+        String shippingCity    = request.getParameter("shippingCity");
+        String shippingPostal  = request.getParameter("shippingPostal");
+
+        if (isBlank(firstName) || isBlank(lastName) || isBlank(email) || isBlank(password)
+                || isBlank(creditCardNumber) || isBlank(creditCardExpiry) || isBlank(creditCardCVV)
+                || isBlank(billingAddress) || isBlank(billingCity) || isBlank(billingPostal)
+                || isBlank(shippingAddress) || isBlank(shippingCity) || isBlank(shippingPostal)) {
+
+            request.setAttribute("error", "All fields are required (account, payment, billing, shipping).");
             request.getRequestDispatcher("register.jsp").forward(request, response);
             return;
         }
 
-        Customer created = CustomerDAO.register(firstName.trim(), lastName.trim(), email.trim(), password);
+        Customer created = CustomerDAO.register(
+                firstName.trim(),
+                lastName.trim(),
+                email.trim(),
+                password,
+                creditCardNumber.trim(),
+                creditCardExpiry.trim(),
+                creditCardCVV.trim(),
+                billingAddress.trim(),
+                billingCity.trim(),
+                billingPostal.trim(),
+                shippingAddress.trim(),
+                shippingCity.trim(),
+                shippingPostal.trim()
+        );
 
         if (created == null) {
             request.setAttribute("error", "Could not create account. Email may already exist.");
@@ -56,5 +85,9 @@ public class RegisterServlet extends HttpServlet {
         } else {
             response.sendRedirect(request.getContextPath() + "/catalog?view=all");
         }
+    }
+    
+    private boolean isBlank(String s) {
+        return s == null || s.trim().isEmpty();
     }
 }
