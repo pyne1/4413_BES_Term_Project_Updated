@@ -13,7 +13,6 @@ import javax.servlet.http.Cookie;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 
-
 @WebServlet("/catalog")
 public class ProductListServlet extends HttpServlet {
 
@@ -24,28 +23,36 @@ public class ProductListServlet extends HttpServlet {
                          HttpServletResponse response)
             throws ServletException, IOException {
 
-    HttpSession session = request.getSession(true);
+        HttpSession session = request.getSession(true);
 
-        
-     // Initialize session cart + cartCount from cookie (so badge isn't 0 after login)
         if (session.getAttribute("cart") == null) {
             Cart cart = loadCartFromCookie(request);
             session.setAttribute("cart", cart);
             session.setAttribute("cartCount", cart.getTotalQuantity());
         }
 
-
         String view = request.getParameter("view");
         String brand = request.getParameter("brand");
         String category = request.getParameter("category");
-        
+
+        String q = request.getParameter("q");
+        String type = request.getParameter("type");
+        String genre = request.getParameter("genre");
+
         String sort = request.getParameter("sort");
         if (sort == null) sort = "none";
- 
 
         List<Product> products;
 
-        if ("brand".equalsIgnoreCase(view) && brand != null && !brand.isEmpty()) {
+        boolean hasSearch =
+                (q != null && !q.trim().isEmpty()) ||
+                (type != null && !type.trim().isEmpty()) ||
+                (genre != null && !genre.trim().isEmpty());
+
+        if ("search".equalsIgnoreCase(view) || hasSearch) {
+            view = "search";
+            products = ProductDao.search(q, type, genre, sort);
+        } else if ("brand".equalsIgnoreCase(view) && brand != null && !brand.isEmpty()) {
             products = ProductDao.getByBrand(brand, sort);
         } else if ("category".equalsIgnoreCase(view) && category != null && !category.isEmpty()) {
             products = ProductDao.getByCategory(category, sort);
@@ -62,10 +69,13 @@ public class ProductListServlet extends HttpServlet {
         request.setAttribute("selectedCategory", category);
         request.setAttribute("selectedSort", sort);
 
+        request.setAttribute("q", q == null ? "" : q);
+        request.setAttribute("type", type == null ? "" : type);
+        request.setAttribute("genre", genre == null ? "" : genre);
 
         request.getRequestDispatcher("items.jsp").forward(request, response);
     }
-    
+
     private Cart loadCartFromCookie(HttpServletRequest req) {
         Cart cart = new Cart();
         Cookie[] cookies = req.getCookies();
@@ -101,5 +111,4 @@ public class ProductListServlet extends HttpServlet {
         }
         return cart;
     }
-
 }

@@ -273,6 +273,50 @@ public class ProductDao {
     }
 
 
+    public static List<Product> search(String q, String type, String genre, String sort) {
+        List<Product> list = new ArrayList<>();
+
+        StringBuilder sql = new StringBuilder(BASE_SELECT + " WHERE 1=1 ");
+        List<Object> params = new ArrayList<>();
+
+        if (q != null && !q.trim().isEmpty()) {
+            String like = "%" + q.trim().toLowerCase() + "%";
+            sql.append(" AND (LOWER(p.name) LIKE ? OR LOWER(p.description) LIKE ? OR LOWER(b.name) LIKE ? OR LOWER(c.name) LIKE ?) ");
+            params.add(like);
+            params.add(like);
+            params.add(like);
+            params.add(like);
+        }
+
+        if (type != null && !type.trim().isEmpty()) {
+            sql.append(" AND c.name = ? ");
+            params.add(type.trim());
+        }
+
+        if (genre != null && !genre.trim().isEmpty()) {
+            sql.append(" AND b.name = ? ");
+            params.add(genre.trim());
+        }
+
+        sql.append(orderBy(sort));
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) list.add(mapRow(rs));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
 
 
 
