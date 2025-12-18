@@ -29,7 +29,7 @@ public class CheckoutServlet extends HttpServlet {
         Customer customer = (Customer) session.getAttribute("currentCustomer");
         if (customer == null) {
             session.setAttribute("redirectAfterLogin", "checkout");
-            response.sendRedirect(request.getContextPath() + "/login");
+            request.getRequestDispatcher("forceLogin.jsp").forward(request, response);
             return;
         }
 
@@ -52,7 +52,7 @@ public class CheckoutServlet extends HttpServlet {
         Customer customer = (Customer) session.getAttribute("currentCustomer");
         if (customer == null) {
             session.setAttribute("redirectAfterLogin", "checkout");
-            response.sendRedirect(request.getContextPath() + "/login");
+            request.getRequestDispatcher("forceLogin.jsp").forward(request, response);
             return;
         }
 

@@ -60,9 +60,7 @@ public class CustomerDAO {
     }
 
     public static boolean createCustomer(Customer c) {
-        String sql = "INSERT INTO customer " +
-                "(firstName, lastName, email, passwordHash) " +
-                "VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO customer (firstName, lastName, email, passwordHash) VALUES (?, ?, ?, ?)";
 
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -98,8 +96,7 @@ public class CustomerDAO {
     }
 
     public static boolean updateCustomer(Customer c) {
-        String sql = "UPDATE customer SET firstName = ?, lastName = ?, email = ? " +
-                     "WHERE id = ?";
+        String sql = "UPDATE customer SET firstName = ?, lastName = ?, email = ? WHERE id = ?";
 
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -140,5 +137,19 @@ public class CustomerDAO {
         }
 
         return list;
+    }
+
+    public static Customer register(String firstName, String lastName, String email, String passwordHash) {
+        Customer existing = findByEmail(email);
+        if (existing != null) return null;
+
+        Customer c = new Customer();
+        c.setFirstName(firstName);
+        c.setLastName(lastName);
+        c.setEmail(email);
+        c.setPassword(passwordHash);
+
+        boolean ok = createCustomer(c);
+        return ok ? c : null;
     }
 }
