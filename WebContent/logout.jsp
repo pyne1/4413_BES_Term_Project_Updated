@@ -1,7 +1,12 @@
+<% if (session.getAttribute("currentCustomer") != null) { %>
+
 <div class="logout-container">
     <a href="<%= request.getContextPath() %>/account" class="account-btn">Account</a>
     <a href="<%= request.getContextPath() %>/logout" class="logout-btn">Logout</a>
 </div>
+
+<% } %>
+
 
 <style>
 .logout-container {
