@@ -58,7 +58,7 @@ if (section == null) section = "inventory";
             <td><%= p.getQuantity() %></td>
             <td>
                 <!-- Update Product Form -->
-                <form action="admin" method="post">
+					<form action="<%=request.getContextPath()%>/admin" method="post">
                     <input type="hidden" name="action" value="updateProduct">
                     <input type="hidden" name="itemID" value="<%= p.getItemID() %>">
                     <input type="text" name="name" value="<%= p.getName() %>" size="12">
@@ -67,7 +67,7 @@ if (section == null) section = "inventory";
                     <input type="number" step="0.01" name="price" value="<%= p.getPrice() %>" size="5">
                     <input type="number" name="quantity" value="<%= p.getQuantity() %>" size="5">
                     
-                    <!-- button to save -->>
+                    <!-- button to save -->
                     <button class="btn">Save</button>
                 </form>
             </td>
@@ -77,7 +77,7 @@ if (section == null) section = "inventory";
 
 <!-- Add New Product -->
 <h3>Add Product</h3>
-<form method="post" action="admin">
+<form method="post" action="<%=request.getContextPath()%>/admin">
     <input type="hidden" name="action" value="addProduct">
     Name: <input type="text" name="name"> 
     Brand: <input type="text" name="brand"> 
@@ -130,7 +130,7 @@ if (section == null) section = "inventory";
             <td><%= c.getEmail() %></td>
 
             <td>
-                <form method="post" action="admin">
+					<form method="post" action="<%=request.getContextPath()%>/admin">
                     <input type="hidden" name="action" value="updateUser">
                     <input type="hidden" name="id" value="<%= c.getId() %>">
                     <input type="text" name="firstName" value="<%= c.getFirstName() %>">

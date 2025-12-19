@@ -89,20 +89,20 @@ public class AdminServlet extends HttpServlet {
 
         
         if ("updateProduct".equals(action)) {
-           
-        	
-        	String itemID = request.getParameter("itemID");
+
+            String itemID = request.getParameter("itemID");
             String name = request.getParameter("name");
             String brand = request.getParameter("brand");
             String category = request.getParameter("category");
-           
-            
+
             double price = Double.parseDouble(request.getParameter("price"));
             int quantity = Integer.parseInt(request.getParameter("quantity"));
 
             Product p = new Product();
-           
-            
+
+            int pid = Integer.parseInt(itemID);
+            p.setProductId(pid);
+
             p.setItemID(itemID);
             p.setName(name);
             p.setBrand(brand);
@@ -110,13 +110,17 @@ public class AdminServlet extends HttpServlet {
             p.setPrice(price);
             p.setQuantity(quantity);
 
-          
+            Product existing = ProductDao.getById(itemID);
+            if (existing != null) {
+                p.setDescription(existing.getDescription());
+                p.setImageUrl(existing.getImageUrl());
+            }
+
             ProductDao.updateProduct(p);
             response.sendRedirect("admin?section=inventory");
             return;
-            
-            
         }
+
 
         if ("addProduct".equals(action)) {
             String name = request.getParameter("name");
